@@ -8,6 +8,8 @@
     // Parse Articulate 360 / xAPI query parameters:
     // ?endpoint=...&auth=...&actor={"name":["..."],"mbox":["mailto:..."]}&activity_id=...
     const tc = TinCan.fromQueryParams();
+    const urlParams = new URLSearchParams(window.location.search);
+    const customVideo = urlParams.get('video_url') || urlParams.get('video');
 
     const video = document.getElementById('mediaVideo');
     const statusBanner = document.getElementById('statusBanner');
@@ -18,8 +20,12 @@
         100: document.getElementById('milestone100')
     };
 
-    const activityId = tc.activity || 'http://lrs-poc.internal/activities/compliance-video-module';
-    const activityName = 'Mandatory Healthcare Compliance Video';
+    if (customVideo && video) {
+        video.src = customVideo;
+    }
+
+    const activityId = tc.activity || (customVideo ? `http://lrs-poc.internal/activities/video/${encodeURIComponent(customVideo)}` : 'http://lrs-poc.internal/activities/compliance-video-module');
+    const activityName = customVideo ? customVideo.split('/').pop().replace(/\.[a-z0-9]+$/i, '').replace(/[-_]/g, ' ') : 'Mandatory Healthcare Compliance Video';
 
     // Telemetry state tracking
     const milestonesReached = { 25: false, 50: false, 75: false, 100: false };

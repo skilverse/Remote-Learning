@@ -38,7 +38,7 @@ resource "google_sql_database_instance" "lrs_primary" {
 
     database_flags {
       name  = "max_connections"
-      value = "200"
+      value = "50"
     }
   }
 

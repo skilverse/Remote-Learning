@@ -1,7 +1,7 @@
 variable "project_id" {
   description = "The GCP Project ID for the LRS Pipeline deployment"
   type        = string
-  default     = "lrs-pipeline-poc"
+  default     = "diesel-cat-509409-e5"
 }
 
 variable "region" {
@@ -18,21 +18,21 @@ variable "environment" {
 
 # Cloud SQL PostgreSQL Configuration
 variable "db_instance_tier" {
-  description = "Cloud SQL machine tier (db-custom-1-3840 for standard, or db-f1-micro for low-cost POC)"
+  description = "Cloud SQL machine tier (db-f1-micro for low-cost POC)"
   type        = string
-  default     = "db-custom-1-3840"
+  default     = "db-f1-micro"
 }
 
 variable "db_disk_size_gb" {
   description = "Initial storage disk size in GB"
   type        = number
-  default     = 20
+  default     = 10
 }
 
 variable "db_disk_autoresize_limit_gb" {
   description = "Maximum storage limit for Cloud SQL auto-resizing"
   type        = number
-  default     = 1000
+  default     = 50
 }
 
 variable "db_name" {
@@ -62,9 +62,21 @@ variable "enable_read_replica" {
 
 # Cloud Run Configuration
 variable "trax_image_uri" {
-  description = "Artifact Registry or Container Registry URI for the Trax LRS image"
+  description = "Artifact Registry URI for the Trax LRS image"
   type        = string
-  default     = "gcr.io/cloudrun/hello" # Placeholder to be overridden with custom build
+  default     = "us-central1-docker.pkg.dev/diesel-cat-509409-e5/lrs-containers/trax-lrs:latest"
+}
+
+variable "nexus_image_uri" {
+  description = "Artifact Registry URI for the Learning Nexus LMS image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/diesel-cat-509409-e5/lrs-containers/mock-nexus:latest"
+}
+
+variable "portal_image_uri" {
+  description = "Artifact Registry URI for the HIS Web Portal image"
+  type        = string
+  default     = "us-central1-docker.pkg.dev/diesel-cat-509409-e5/lrs-containers/his-portal:latest"
 }
 
 variable "min_instances" {
@@ -76,19 +88,38 @@ variable "min_instances" {
 variable "max_instances" {
   description = "Maximum instances for Cloud Run"
   type        = number
-  default     = 10
+  default     = 5
 }
 
 # Learning Nexus Integration
-variable "nexus_api_url" {
-  description = "Target REST API endpoint for Learning Nexus completions"
-  type        = string
-  default     = "https://nexus.hospital.org/api/v1/completions"
-}
-
 variable "nexus_api_key" {
   description = "API authentication bearer token for Learning Nexus"
   type        = string
   sensitive   = true
   default     = "nexus_sec_key_poc_2026"
+}
+
+# Custom Domains for lxdhq.in
+variable "domain_his" {
+  description = "Custom domain for HIS Portal"
+  type        = string
+  default     = "his.lxdhq.in"
+}
+
+variable "domain_lms" {
+  description = "Custom domain for LMS Registry & Dashboard"
+  type        = string
+  default     = "lms.lxdhq.in"
+}
+
+variable "domain_lrs" {
+  description = "Custom domain for xAPI LRS Endpoint"
+  type        = string
+  default     = "lrs.lxdhq.in"
+}
+
+variable "enable_custom_domains" {
+  description = "Whether to provision Cloud Run Domain Mappings for lxdhq.in"
+  type        = bool
+  default     = true
 }

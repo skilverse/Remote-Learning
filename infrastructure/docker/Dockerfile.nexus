@@ -1,0 +1,14 @@
+# Production Dockerfile for Learning Nexus Mock LMS on Google Cloud Run
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY mock-nexus-api/package.json ./
+RUN npm install --omit=dev 2>/dev/null || true
+
+COPY mock-nexus-api/ ./
+
+ENV PORT=8080
+EXPOSE 8080
+
+CMD ["node", "server.js"]

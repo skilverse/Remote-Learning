@@ -6,6 +6,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const { scanMediaWrappers } = require('./catalog-scanner');
 
 const PORT = parseInt(process.env.PORT || '4000', 10);
 const EXPECTED_TOKEN = process.env.NEXUS_API_KEY || 'nexus_sec_key_poc_2026';
@@ -78,6 +79,28 @@ const server = http.createServer((req, res) => {
             res.writeHead(404, { 'Content-Type': 'text/plain' });
             res.end('Dashboard file not found');
         }
+        return;
+    }
+
+    // GET /api/v1/learning-objects (Live Auto-Discovery & Classification of Media Wrappers)
+    if (pathname === '/api/v1/learning-objects' && req.method === 'GET') {
+        const wrappersDir = process.env.MEDIA_WRAPPERS_DIR || path.join(__dirname, '..', 'media-wrappers');
+        const catalog = scanMediaWrappers(wrappersDir);
+
+        // Also sync catalog.json into wrappersDir for static fallback if accessible
+        try {
+            const catalogFile = path.join(wrappersDir, 'catalog.json');
+            fs.writeFileSync(catalogFile, JSON.stringify(catalog, null, 2), 'utf8');
+        } catch (e) {
+            // Read-only filesystem is tolerated
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({
+            status: 'success',
+            count: catalog.length,
+            catalog: catalog
+        }));
         return;
     }
 

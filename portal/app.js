@@ -22,10 +22,12 @@
     const userComplianceScore = document.getElementById('userComplianceScore');
 
     const helpIconBtn = document.getElementById('helpIconBtn');
+    const helpNotificationBadge = document.getElementById('helpNotificationBadge');
     const helpDrawer = document.getElementById('helpDrawer');
     const closeDrawerBtn = document.getElementById('closeDrawerBtn');
     const sidebarTrainingLink = document.getElementById('sidebarTrainingLink');
     const drawerActorDisplay = document.getElementById('drawerActorDisplay');
+    const trainingCardsContainer = document.getElementById('trainingCardsContainer');
 
     const playerModalBackdrop = document.getElementById('playerModalBackdrop');
     const playerModalTitle = document.getElementById('playerModalTitle');
@@ -42,29 +44,51 @@
     const currentHost = window.location.hostname || 'localhost';
     if (displayDomain) displayDomain.textContent = currentHost;
 
-    // Detect LRS Endpoint (uses localhost:8000 for local docker, or current origin for custom domain like lrs.lxdhq.in)
-    const LRS_ENDPOINT = (currentHost === 'localhost' || currentHost === '127.0.0.1')
-        ? 'http://localhost:8000/xapi/'
-        : `${window.location.origin}/xapi/`;
-    const LRS_AUTH = 'Basic cG9jX3VzZXI6cG9jX3Bhc3M=';
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryEndpoint = urlParams.get('endpoint');
 
-    // Learning Object Paths
-    const ASSET_REGISTRY = {
+    // Detect LRS Endpoint (uses https://lrs.lxdhq.in/xapi/ for custom domain, localhost for dev, or current origin)
+    const LRS_ENDPOINT = queryEndpoint || (
+        (currentHost === 'his.lxdhq.in' || currentHost.includes('his.lxdhq.in'))
+            ? 'https://lrs.lxdhq.in/xapi/'
+            : (currentHost === 'localhost' || currentHost === '127.0.0.1')
+                ? 'http://localhost:8000/xapi/'
+                : `${window.location.origin}/xapi/`
+    );
+    const LRS_AUTH = urlParams.get('auth') || 'Basic cG9jX3VzZXI6cG9jX3Bhc3M=';
+
+    // Learning Objects Dynamic Registry
+    let ASSET_REGISTRY = {
         pdf: {
+            id: 'pdf',
             title: 'Hospital Compliance & Data Privacy Guidelines (PDF)',
+            type: 'pdf',
+            typeLabel: 'PDF Document Wrapper',
+            badgeColor: '#0284c7',
             path: '../media-wrappers/pdf/index.html',
             activityId: 'http://lrs-poc.internal/activities/pdf/sample.pdf',
+            description: 'Mandatory SOP document with dwell tracking, page reading progression, and official completion attestation.',
             pdfFile: 'sample.pdf'
         },
         video: {
+            id: 'video',
             title: 'Clinical Safety & Infection Control Protocol (MP4 Video)',
+            type: 'video',
+            typeLabel: 'MP4 Video Wrapper',
+            badgeColor: '#d97706',
             path: '../media-wrappers/video/index.html',
-            activityId: 'http://lrs-poc.internal/activities/compliance-video-module'
+            activityId: 'http://lrs-poc.internal/activities/compliance-video-module',
+            description: 'Standardized HTML5 video player with TinCan.js telemetry tracking quartiles (25%, 50%, 75%, 100%).'
         },
         articulate: {
+            id: 'articulate',
             title: 'Annual HIPAA Knowledge Check (Articulate 360)',
+            type: 'xapi',
+            typeLabel: 'Articulate 360',
+            badgeColor: '#16a34a',
             path: '../media-wrappers/articulate-mock/index_lms.html',
-            activityId: 'http://lrs-poc.internal/activities/articulate-storyline-course'
+            activityId: 'http://lrs-poc.internal/activities/articulate-storyline-course',
+            description: 'Articulate Storyline 360 / Rise 360 package verifying native query string parsing and score reporting.'
         }
     };
 
@@ -155,6 +179,7 @@
     // =========================================================================
     function openHelpDrawer() {
         helpDrawer.classList.add('open');
+        loadCatalog(); // Dynamically discover additions or deletions every time drawer opens
     }
 
     function closeHelpDrawer() {
@@ -166,8 +191,130 @@
     closeDrawerBtn.addEventListener('click', closeHelpDrawer);
 
     // =========================================================================
-    // 3. Dynamic URL Construction & In-App Learning Object Launch
+    // 3. Dynamic Catalog Auto-Discovery & In-App Learning Object Launch
     // =========================================================================
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function renderTrainingCards() {
+        if (!trainingCardsContainer) return;
+
+        const assetKeys = Object.keys(ASSET_REGISTRY);
+        if (assetKeys.length === 0) {
+            trainingCardsContainer.innerHTML = `
+                <div style="text-align: center; color: #64748b; padding: 24px; font-size: 0.85rem;">
+                    📁 No learning objects found in <code>media-wrappers/</code>.
+                </div>
+            `;
+            if (helpNotificationBadge) helpNotificationBadge.textContent = '0';
+            return;
+        }
+
+        if (helpNotificationBadge) {
+            helpNotificationBadge.textContent = assetKeys.length;
+        }
+
+        const completedList = getCompletedActivities();
+
+        let html = '';
+        for (const key of assetKeys) {
+            const asset = ASSET_REGISTRY[key];
+            const isCompleted = completedList.includes(asset.activityId);
+
+            let tagBg = '#e0f2fe';
+            let tagColor = asset.badgeColor || '#0284c7';
+            if (asset.type === 'video') {
+                tagBg = '#fef3c7';
+                tagColor = '#d97706';
+            } else if (asset.type === 'xapi') {
+                tagBg = '#dcfce7';
+                tagColor = '#16a34a';
+            }
+
+            const launchLabel = asset.type === 'pdf' ? 'Launch PDF Document'
+                : asset.type === 'video' ? 'Launch Video Training'
+                : 'Launch Course';
+
+            html += `
+                <div class="training-item-card" data-card-id="${asset.id}">
+                    <div class="training-item-header">
+                        <span class="training-tag" style="background: ${tagBg}; color: ${tagColor};">
+                            ${asset.typeLabel || 'Interactive Object'}
+                        </span>
+                        <span class="training-status ${isCompleted ? 'completed' : ''}" id="status-${asset.id}">
+                            ${isCompleted ? 'Completed ✓' : 'Not Started'}
+                        </span>
+                    </div>
+                    <div class="training-item-title">${escapeHtml(asset.title)}</div>
+                    <div class="training-item-desc">${escapeHtml(asset.description || '')}</div>
+                    <button class="btn-launch-training" data-asset="${asset.id}">
+                        <span>▶</span>
+                        <span>${launchLabel}</span>
+                    </button>
+                </div>
+            `;
+        }
+
+        trainingCardsContainer.innerHTML = html;
+
+        // Rebind click listeners to all dynamically created "Launch Training" buttons
+        trainingCardsContainer.querySelectorAll('.btn-launch-training').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const assetKey = btn.getAttribute('data-asset');
+                launchLearningModule(assetKey);
+            });
+        });
+    }
+
+    async function loadCatalog() {
+        try {
+            let catalogList = null;
+
+            // 1. Live server discovery scan (detects added/removed folders in real-time)
+            try {
+                const res = await fetch('/api/v1/learning-objects');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && Array.isArray(data.catalog) && data.catalog.length > 0) {
+                        catalogList = data.catalog;
+                    }
+                }
+            } catch (apiErr) {
+                console.warn('[HIS Portal] Direct discovery API unavailable, attempting static catalog.json fallback:', apiErr);
+            }
+
+            // 2. Static catalog.json fallback (for pure GCS or offline backend deployment)
+            if (!catalogList) {
+                try {
+                    const staticRes = await fetch('../media-wrappers/catalog.json');
+                    if (staticRes.ok) {
+                        catalogList = await staticRes.json();
+                    }
+                } catch (staticErr) {
+                    console.warn('[HIS Portal] Static catalog.json fallback unavailable:', staticErr);
+                }
+            }
+
+            if (Array.isArray(catalogList) && catalogList.length > 0) {
+                ASSET_REGISTRY = {};
+                catalogList.forEach(item => {
+                    ASSET_REGISTRY[item.id] = item;
+                });
+            }
+        } catch (e) {
+            console.error('[HIS Portal] Failed to load learning objects catalog:', e);
+        }
+
+        renderTrainingCards();
+        updateComplianceProgress();
+    }
+
     /**
      * Constructs Articulate 360 & TinCan query string schema:
      * [BASE_URL]?endpoint=[LRS_URL]&auth=[LRS_AUTH]&actor={"name":["<User_Name>"],"mbox":["mailto:<User_Email>"]}
@@ -192,11 +339,12 @@
         urlParams.set('actor', JSON.stringify(actorObj));
         urlParams.set('activity_id', asset.activityId);
 
-        if (assetKey === 'pdf' && asset.pdfFile) {
+        if (asset.type === 'pdf' && asset.pdfFile) {
             urlParams.set('pdf_url', asset.pdfFile);
         }
 
-        return `${asset.path}?${urlParams.toString()}`;
+        const joinChar = asset.path.includes('?') ? '&' : '?';
+        return `${asset.path}${joinChar}${urlParams.toString()}`;
     }
 
     function launchLearningModule(assetKey) {
@@ -216,14 +364,6 @@
 
         console.log(`[HIS Portal] Launching ${assetKey} with dynamic actor:`, launchUrl);
     }
-
-    // Attach click listeners to all "Launch Training" buttons
-    document.querySelectorAll('.btn-launch-training').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const assetKey = btn.getAttribute('data-asset');
-            launchLearningModule(assetKey);
-        });
-    });
 
     // Close Player Modal
     closePlayerBtn.addEventListener('click', () => {
@@ -272,7 +412,7 @@
         // Update metrics card
         if (userComplianceScore) {
             if (list.length === 0) {
-                userComplianceScore.textContent = '0 / 3 Modules';
+                userComplianceScore.textContent = `0 / ${total} Modules`;
                 userComplianceScore.style.color = '#d97706';
             } else if (list.length >= total) {
                 userComplianceScore.textContent = '100% Certified ✓';
@@ -317,8 +457,9 @@
         }, 5000);
     }
 
-    // Initialize session on load
+    // Initialize session and dynamic catalog on load
     window.addEventListener('DOMContentLoaded', () => {
         initSession();
+        loadCatalog();
     });
 })();

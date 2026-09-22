@@ -2,9 +2,10 @@
 
 # Bucket for Cloud Function Source Code
 resource "google_storage_bucket" "function_source" {
-  name          = "${local.name_prefix}-fn-source-${random_id.suffix.hex}"
-  location      = var.region
-  force_destroy = true
+  name                        = "${local.name_prefix}-fn-source-${random_id.suffix.hex}"
+  location                    = var.region
+  force_destroy               = true
+  uniform_bucket_level_access = true
 }
 
 # Source Code Archive for Data Bridge
@@ -46,13 +47,14 @@ resource "google_cloudfunctions2_function" "data_bridge" {
     environment_variables = {
       LRS_ENDPOINT  = "${google_cloud_run_v2_service.trax_lrs.uri}/xapi/"
       LRS_AUTH      = "Basic cG9jX3VzZXI6cG9jX3Bhc3M="
-      NEXUS_API_URL = var.nexus_api_url
+      NEXUS_API_URL = "${google_cloud_run_v2_service.mock_nexus.uri}/api/v1/completions"
       NEXUS_API_KEY = var.nexus_api_key
     }
   }
 
   depends_on = [
-    google_cloud_run_v2_service.trax_lrs
+    google_cloud_run_v2_service.trax_lrs,
+    google_cloud_run_v2_service.mock_nexus
   ]
 }
 

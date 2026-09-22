@@ -1,5 +1,6 @@
-# Google Cloud Run Service: Trax LRS Serverless Container Runtime
+# Google Cloud Run Services for LRS, LMS, and HIS Portal
 
+# 1. Trax LRS (xAPI 1.0.3 Statement Ingestion Engine)
 resource "google_cloud_run_v2_service" "trax_lrs" {
   name     = "${local.name_prefix}-trax-lrs"
   location = var.region
@@ -7,7 +8,7 @@ resource "google_cloud_run_v2_service" "trax_lrs" {
 
   template {
     scaling {
-      min_instance_count = var.min_instances # 0 for scale-to-zero in POC
+      min_instance_count = var.min_instances
       max_instance_count = var.max_instances
     }
 
@@ -16,30 +17,14 @@ resource "google_cloud_run_v2_service" "trax_lrs" {
 
       resources {
         limits = {
-          cpu    = "2000m"
-          memory = "2048Mi" # Minimum recommended memory for Trax LRS PHP execution
+          cpu    = "1000m"
+          memory = "512Mi"
         }
       }
 
       env {
-        name  = "APP_ENV"
+        name  = "NODE_ENV"
         value = "production"
-      }
-      env {
-        name  = "APP_DEBUG"
-        value = "false"
-      }
-      env {
-        name  = "DB_CONNECTION"
-        value = "pgsql"
-      }
-      env {
-        name  = "DB_HOST"
-        value = "127.0.0.1"
-      }
-      env {
-        name  = "DB_PORT"
-        value = "5432"
       }
       env {
         name  = "DB_SOCKET"
@@ -83,11 +68,148 @@ resource "google_cloud_run_v2_service" "trax_lrs" {
   ]
 }
 
-# Phase 1: Allow public unauthenticated invocation for proof-of-concept testing
-resource "google_cloud_run_v2_service_iam_member" "public_access" {
+resource "google_cloud_run_v2_service_iam_member" "trax_lrs_public" {
   project  = google_cloud_run_v2_service.trax_lrs.project
   location = google_cloud_run_v2_service.trax_lrs.location
   name     = google_cloud_run_v2_service.trax_lrs.name
   role     = "roles/run.invoker"
   member   = "allUsers"
+}
+
+# 2. Learning Nexus LMS Registry & Dashboard Service
+resource "google_cloud_run_v2_service" "mock_nexus" {
+  name     = "${local.name_prefix}-mock-nexus"
+  location = var.region
+  ingress  = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    scaling {
+      min_instance_count = var.min_instances
+      max_instance_count = var.max_instances
+    }
+
+    containers {
+      image = var.nexus_image_uri
+
+      resources {
+        limits = {
+          cpu    = "1000m"
+          memory = "512Mi"
+        }
+      }
+
+      env {
+        name  = "NEXUS_API_KEY"
+        value = var.nexus_api_key
+      }
+
+      ports {
+        container_port = 8080
+      }
+    }
+  }
+
+  traffic {
+    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+    percent = 100
+  }
+}
+
+resource "google_cloud_run_v2_service_iam_member" "mock_nexus_public" {
+  project  = google_cloud_run_v2_service.mock_nexus.project
+  location = google_cloud_run_v2_service.mock_nexus.location
+  name     = google_cloud_run_v2_service.mock_nexus.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
+# 3. HIS Web Portal & Media Wrappers Service
+resource "google_cloud_run_v2_service" "his_portal" {
+  name     = "${local.name_prefix}-his-portal"
+  location = var.region
+  ingress  = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    scaling {
+      min_instance_count = var.min_instances
+      max_instance_count = var.max_instances
+    }
+
+    containers {
+      image = var.portal_image_uri
+
+      resources {
+        limits = {
+          cpu    = "1000m"
+          memory = "512Mi"
+        }
+      }
+
+      ports {
+        container_port = 8080
+      }
+    }
+  }
+
+  traffic {
+    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+    percent = 100
+  }
+}
+
+resource "google_cloud_run_v2_service_iam_member" "his_portal_public" {
+  project  = google_cloud_run_v2_service.his_portal.project
+  location = google_cloud_run_v2_service.his_portal.location
+  name     = google_cloud_run_v2_service.his_portal.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
+# 4. Custom Domain Mappings (his.lxdhq.in, lms.lxdhq.in, lrs.lxdhq.in)
+resource "google_cloud_run_domain_mapping" "his_domain" {
+  count    = var.enable_custom_domains ? 1 : 0
+  location = var.region
+  name     = var.domain_his
+
+  metadata {
+    namespace = var.project_id
+  }
+
+  spec {
+    route_name = google_cloud_run_v2_service.his_portal.name
+  }
+
+  depends_on = [google_cloud_run_v2_service.his_portal]
+}
+
+resource "google_cloud_run_domain_mapping" "lms_domain" {
+  count    = var.enable_custom_domains ? 1 : 0
+  location = var.region
+  name     = var.domain_lms
+
+  metadata {
+    namespace = var.project_id
+  }
+
+  spec {
+    route_name = google_cloud_run_v2_service.mock_nexus.name
+  }
+
+  depends_on = [google_cloud_run_v2_service.mock_nexus]
+}
+
+resource "google_cloud_run_domain_mapping" "lrs_domain" {
+  count    = var.enable_custom_domains ? 1 : 0
+  location = var.region
+  name     = var.domain_lrs
+
+  metadata {
+    namespace = var.project_id
+  }
+
+  spec {
+    route_name = google_cloud_run_v2_service.trax_lrs.name
+  }
+
+  depends_on = [google_cloud_run_v2_service.trax_lrs]
 }

@@ -35,12 +35,14 @@ services:
     working_dir: /app
     volumes:
       - ./mock-nexus-api:/app
+      - ./media-wrappers:/media-wrappers:ro
     command: node server.js
     ports:
       - "4000:4000"
     environment:
       - PORT=4000
       - NEXUS_API_KEY=nexus_sec_key_poc_2026
+      - MEDIA_WRAPPERS_DIR=/media-wrappers
     restart: unless-stopped
 
   # 4. COMPONENT 03: Data Bridge Poller Daemon
