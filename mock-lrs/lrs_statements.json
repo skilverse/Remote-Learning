@@ -1,0 +1,758 @@
+[
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/compliance-video-module",
+      "definition": {
+        "name": {
+          "en-US": "Healthcare Compliance Video"
+        }
+      }
+    },
+    "timestamp": "2026-09-22T06:55:03.309Z",
+    "id": "40a92fd0-fcf0-4d9d-851f-c329660e575d",
+    "stored": "2026-09-22T06:55:03.361Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/completed",
+      "display": {
+        "en-US": "completed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/compliance-video-module",
+      "definition": {
+        "name": {
+          "en-US": "Healthcare Compliance Video"
+        }
+      }
+    },
+    "result": {
+      "completion": true,
+      "success": true,
+      "score": {
+        "scaled": 1,
+        "raw": 100,
+        "min": 0,
+        "max": 100
+      }
+    },
+    "timestamp": "2026-09-22T06:55:03.379Z",
+    "id": "0a75042d-a5ef-4a2d-b4dc-13f84f517e40",
+    "stored": "2026-09-22T06:55:03.383Z"
+  },
+  {
+    "actor": {
+      "name": "Jane Doe",
+      "mbox": "mailto:jane.doe@hospital.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/security-policy-document",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0M0S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf"
+      }
+    },
+    "timestamp": "2026-09-22T07:01:57.729Z",
+    "id": "86b3a973-01d3-49fe-a6fe-f39a84a1a93a",
+    "stored": "2026-09-22T07:01:57.741Z"
+  },
+  {
+    "actor": {
+      "name": "Jane Doe",
+      "mbox": "mailto:jane.doe@hospital.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/security-policy-document",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0M0S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf"
+      }
+    },
+    "timestamp": "2026-09-22T07:02:07.371Z",
+    "id": "cb7fe777-73b9-4745-827c-77c1b39678e9",
+    "stored": "2026-09-22T07:02:07.390Z"
+  },
+  {
+    "actor": {
+      "name": "Jane Doe",
+      "mbox": "mailto:jane.doe@hospital.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/progressed",
+      "display": {
+        "en-US": "progressed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/security-policy-document",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0M10S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/reading-dwell-sec": 10,
+        "https://w3id.org/xapi/video/extensions/progress": 0.5
+      }
+    },
+    "timestamp": "2026-09-22T07:02:08.483Z",
+    "id": "ab39b138-a027-4dbf-ab91-82925adc2cc0",
+    "stored": "2026-09-22T07:02:08.486Z"
+  },
+  {
+    "actor": {
+      "name": "Jane Doe",
+      "mbox": "mailto:jane.doe@hospital.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/progressed",
+      "display": {
+        "en-US": "progressed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/security-policy-document",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0M10S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/reading-dwell-sec": 10,
+        "https://w3id.org/xapi/video/extensions/progress": 0.5
+      }
+    },
+    "timestamp": "2026-09-22T07:02:17.377Z",
+    "id": "52ef6ffd-167a-4111-be78-d2d6ba94783d",
+    "stored": "2026-09-22T07:02:17.383Z"
+  },
+  {
+    "actor": {
+      "name": "Jane Doe",
+      "mbox": "mailto:jane.doe@hospital.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/completed",
+      "display": {
+        "en-US": "completed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/security-policy-document",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": true,
+      "duration": "PT0M11S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf",
+        "http://lrs-poc.internal/extensions/total-dwell-sec": 11,
+        "http://lrs-poc.internal/extensions/attestation": true
+      }
+    },
+    "timestamp": "2026-09-22T07:02:19.376Z",
+    "id": "23459ac4-9a1c-449a-89ac-eeb6900441b2",
+    "stored": "2026-09-22T07:02:19.378Z"
+  },
+  {
+    "actor": {
+      "name": "Arjunan",
+      "mbox": "mailto:arjun@hospital.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/security-policy-document",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0M0S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf"
+      }
+    },
+    "timestamp": "2026-09-22T07:03:44.163Z",
+    "id": "7f756d04-d723-41a5-85db-de1869cb005c",
+    "stored": "2026-09-22T07:03:44.181Z"
+  },
+  {
+    "actor": {
+      "name": "Arjunan",
+      "mbox": "mailto:arjun@hospital.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/progressed",
+      "display": {
+        "en-US": "progressed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/security-policy-document",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0M10S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/reading-dwell-sec": 10,
+        "https://w3id.org/xapi/video/extensions/progress": 0.5
+      }
+    },
+    "timestamp": "2026-09-22T07:03:54.167Z",
+    "id": "521af2c2-1719-4422-9eb9-6eee4ebd02a5",
+    "stored": "2026-09-22T07:03:54.172Z"
+  },
+  {
+    "actor": {
+      "name": "Arjunan",
+      "mbox": "mailto:arjun@hospital.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/completed",
+      "display": {
+        "en-US": "completed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/security-policy-document",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": true,
+      "duration": "PT0M56S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf",
+        "http://lrs-poc.internal/extensions/total-dwell-sec": 56,
+        "http://lrs-poc.internal/extensions/attestation": true
+      }
+    },
+    "timestamp": "2026-09-22T07:04:41.003Z",
+    "id": "d47d1bf9-ac29-4f25-a9d4-072c58bdda4c",
+    "stored": "2026-09-22T07:04:41.011Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/compliance-video-module",
+      "definition": {
+        "name": {
+          "en-US": "Healthcare Compliance Video"
+        }
+      }
+    },
+    "timestamp": "2026-09-22T08:15:07.053Z",
+    "id": "d1708337-4260-4d06-979f-7adf6a27962d",
+    "stored": "2026-09-22T08:15:07.117Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/completed",
+      "display": {
+        "en-US": "completed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/compliance-video-module",
+      "definition": {
+        "name": {
+          "en-US": "Healthcare Compliance Video"
+        }
+      }
+    },
+    "result": {
+      "completion": true,
+      "success": true,
+      "score": {
+        "scaled": 1,
+        "raw": 100,
+        "min": 0,
+        "max": 100
+      }
+    },
+    "timestamp": "2026-09-22T08:15:07.134Z",
+    "id": "47dacf89-1d0e-4b4a-8a4a-48c242a4f6d0",
+    "stored": "2026-09-22T08:15:07.137Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/articulate-storyline-course",
+      "definition": {
+        "name": {
+          "en-US": "Articulate Storyline 360 Training Module"
+        },
+        "type": "http://adlnet.gov/expapi/activities/course"
+      }
+    },
+    "result": {},
+    "timestamp": "2026-09-22T08:16:22.433Z",
+    "id": "4c2ca846-231b-419a-99d3-db13a0abc6c0",
+    "stored": "2026-09-22T08:16:22.439Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/experienced",
+      "display": {
+        "en-US": "experienced"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/articulate-storyline-course",
+      "definition": {
+        "name": {
+          "en-US": "Articulate Storyline 360 Training Module"
+        },
+        "type": "http://adlnet.gov/expapi/activities/course"
+      }
+    },
+    "result": {
+      "extensions": {
+        "http://lrs-poc.internal/extensions/slide": 2
+      }
+    },
+    "timestamp": "2026-09-22T08:16:24.721Z",
+    "id": "87507c0c-1c3f-491a-a28c-5f55815e23ae",
+    "stored": "2026-09-22T08:16:24.724Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/experienced",
+      "display": {
+        "en-US": "experienced"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/articulate-storyline-course",
+      "definition": {
+        "name": {
+          "en-US": "Articulate Storyline 360 Training Module"
+        },
+        "type": "http://adlnet.gov/expapi/activities/course"
+      }
+    },
+    "result": {
+      "extensions": {
+        "http://lrs-poc.internal/extensions/slide": 3
+      }
+    },
+    "timestamp": "2026-09-22T08:16:27.466Z",
+    "id": "3a98fef4-bff7-4662-af7f-64c998717b2a",
+    "stored": "2026-09-22T08:16:27.471Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/passed",
+      "display": {
+        "en-US": "passed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/articulate-storyline-course",
+      "definition": {
+        "name": {
+          "en-US": "Articulate Storyline 360 Training Module"
+        },
+        "type": "http://adlnet.gov/expapi/activities/course"
+      }
+    },
+    "result": {
+      "completion": true,
+      "success": true,
+      "score": {
+        "scaled": 1,
+        "raw": 100,
+        "min": 0,
+        "max": 100
+      }
+    },
+    "timestamp": "2026-09-22T08:16:27.467Z",
+    "id": "0e30294c-009f-4cb9-9311-cabddfe79073",
+    "stored": "2026-09-22T08:16:27.477Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/compliance-video-module",
+      "definition": {
+        "name": {
+          "en-US": "Mandatory Healthcare Compliance Video"
+        },
+        "type": "https://w3id.org/xapi/video/activity-type/video"
+      }
+    },
+    "context": {
+      "contextActivities": {
+        "category": [
+          {
+            "id": "https://w3id.org/xapi/video"
+          }
+        ]
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0S",
+      "extensions": {
+        "https://w3id.org/xapi/video/extensions/session-id": "sess-1790065021932"
+      }
+    },
+    "timestamp": "2026-09-22T08:17:01.932Z",
+    "id": "edd1bbf4-79f4-4b4b-8644-b5dad4bfcca2",
+    "stored": "2026-09-22T08:17:01.938Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/compliance-video-module",
+      "definition": {
+        "name": {
+          "en-US": "Mandatory Healthcare Compliance Video"
+        },
+        "type": "https://w3id.org/xapi/video/activity-type/video"
+      }
+    },
+    "context": {
+      "contextActivities": {
+        "category": [
+          {
+            "id": "https://w3id.org/xapi/video"
+          }
+        ]
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0S",
+      "extensions": {
+        "https://w3id.org/xapi/video/extensions/session-id": "sess-1790065028532"
+      }
+    },
+    "timestamp": "2026-09-22T08:17:08.532Z",
+    "id": "7e1d8474-7d7e-41f2-bde9-a842868b0643",
+    "stored": "2026-09-22T08:17:08.543Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/pdf/sample.pdf",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0M0S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf"
+      }
+    },
+    "timestamp": "2026-09-22T08:17:51.048Z",
+    "id": "fb18abd7-238d-4ce7-aa10-646b926793b5",
+    "stored": "2026-09-22T08:17:51.057Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/completed",
+      "display": {
+        "en-US": "completed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/pdf/sample.pdf",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": true,
+      "duration": "PT0M5S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf",
+        "http://lrs-poc.internal/extensions/total-dwell-sec": 5,
+        "http://lrs-poc.internal/extensions/attestation": true
+      }
+    },
+    "timestamp": "2026-09-22T08:17:56.618Z",
+    "id": "692d6048-0f9b-4a60-80a3-3332bb52d4cc",
+    "stored": "2026-09-22T08:17:56.623Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/pdf/sample.pdf",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0M0S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf"
+      }
+    },
+    "timestamp": "2026-09-22T08:18:56.751Z",
+    "id": "161e6645-082c-419a-8077-e71a573205f4",
+    "stored": "2026-09-22T08:18:56.761Z"
+  },
+  {
+    "actor": {
+      "name": "Dr. Sarah Jenkins",
+      "mbox": "mailto:s.jenkins@hospital-system.org"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/completed",
+      "display": {
+        "en-US": "completed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/pdf/sample.pdf",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": true,
+      "duration": "PT0M4S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf",
+        "http://lrs-poc.internal/extensions/total-dwell-sec": 4,
+        "http://lrs-poc.internal/extensions/attestation": true
+      }
+    },
+    "timestamp": "2026-09-22T08:19:01.167Z",
+    "id": "536bf57d-9174-4e36-88b5-1089cb3e4447",
+    "stored": "2026-09-22T08:19:01.170Z"
+  },
+  {
+    "actor": {
+      "name": "Giri",
+      "mbox": "mailto:giri@hospital.com"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/launched",
+      "display": {
+        "en-US": "launched"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/pdf/sample.pdf",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": false,
+      "duration": "PT0M0S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf"
+      }
+    },
+    "timestamp": "2026-09-22T08:37:03.561Z",
+    "id": "b24a09e6-1faf-481c-8279-707178d789f4",
+    "stored": "2026-09-22T08:37:03.569Z"
+  },
+  {
+    "actor": {
+      "name": "Giri",
+      "mbox": "mailto:giri@hospital.com"
+    },
+    "verb": {
+      "id": "http://adlnet.gov/expapi/verbs/completed",
+      "display": {
+        "en-US": "completed"
+      }
+    },
+    "object": {
+      "id": "http://lrs-poc.internal/activities/pdf/sample.pdf",
+      "definition": {
+        "name": {
+          "en-US": "SAMPLE"
+        },
+        "type": "http://activitystrea.ms/schema/1.0/article"
+      }
+    },
+    "result": {
+      "completion": true,
+      "duration": "PT0M6S",
+      "extensions": {
+        "http://lrs-poc.internal/extensions/document-url": "sample.pdf",
+        "http://lrs-poc.internal/extensions/total-dwell-sec": 6,
+        "http://lrs-poc.internal/extensions/attestation": true
+      }
+    },
+    "timestamp": "2026-09-22T08:37:10.388Z",
+    "id": "c7c2bc83-9fff-48d1-81f3-688994959013",
+    "stored": "2026-09-22T08:37:10.395Z"
+  }
+]

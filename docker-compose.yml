@@ -1,0 +1,64 @@
+services:
+  # 1. Mock Trax LRS (xAPI 1.0.3 Statement Store)
+  mock-lrs:
+    image: node:20-alpine
+    container_name: lrs-poc-trax
+    working_dir: /app
+    volumes:
+      - ./mock-lrs:/app
+    command: node server.js
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    restart: unless-stopped
+
+  # 2. Static Web Portal & Media Wrappers (Nginx Server)
+  web-portal:
+    image: nginx:alpine
+    container_name: lrs-poc-portal
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./portal:/usr/share/nginx/html/portal:ro
+      - ./media-wrappers:/usr/share/nginx/html/media-wrappers:ro
+      - ./mock-nexus-api:/usr/share/nginx/html/mock-nexus-api:ro
+    ports:
+      - "8088:80"
+    restart: unless-stopped
+    depends_on:
+      - mock-lrs
+
+  # 3. Mock Learning Nexus REST API & Dashboard
+  mock-nexus:
+    image: node:20-alpine
+    container_name: lrs-poc-nexus
+    working_dir: /app
+    volumes:
+      - ./mock-nexus-api:/app
+    command: node server.js
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - NEXUS_API_KEY=nexus_sec_key_poc_2026
+    restart: unless-stopped
+
+  # 4. COMPONENT 03: Data Bridge Poller Daemon
+  data-bridge:
+    image: node:20-alpine
+    container_name: lrs-poc-data-bridge
+    working_dir: /app
+    volumes:
+      - ./data-bridge:/app
+    command: node index.js
+    environment:
+      - LRS_ENDPOINT=http://mock-lrs:8000/xapi/
+      - LRS_AUTH=Basic cG9jX3VzZXI6cG9jX3Bhc3M=
+      - NEXUS_API_URL=http://mock-nexus:4000/api/v1/completions
+      - NEXUS_TELEMETRY_URL=http://mock-nexus:4000/api/v1/telemetry
+      - NEXUS_API_KEY=nexus_sec_key_poc_2026
+      - POLL_INTERVAL_MS=3000
+    restart: unless-stopped
+    depends_on:
+      - mock-lrs
+      - mock-nexus

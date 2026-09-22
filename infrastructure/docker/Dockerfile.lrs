@@ -1,0 +1,44 @@
+# Production Dockerfile for Trax LRS on Google Cloud Run
+FROM php:8.2-apache
+
+# Install system dependencies & PostgreSQL development libraries
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    && docker-php-ext-install pdo pdo_pgsql pgsql zip opcache bcmath \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configure Apache for Cloud Run ($PORT dynamic binding and document root)
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
+    && a2enmod rewrite headers
+
+# Install Composer
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy application files (or create Trax LRS starter)
+# In standalone build, this pulls the official Trax Starter LRS
+RUN composer create-project trax/lrs /var/www/html --no-dev --prefer-dist --no-interaction || true
+
+# Set appropriate permissions for Laravel storage & bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache 2>/dev/null || true \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache 2>/dev/null || true
+
+# Copy entrypoint script
+COPY infrastructure/docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Cloud Run dynamic port exposure
+EXPOSE 8080
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["apache2-foreground"]

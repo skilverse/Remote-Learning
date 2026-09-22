@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexCare HIS - Health Information System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ====================================================================
+         1. HIS Clinical Navigation Header
+         ==================================================================== -->
+    <header class="his-header">
+        <div class="his-brand">
+            <div class="his-logo-icon">➕</div>
+            <div class="his-brand-title">
+                <span class="his-brand-name">ApexCare HIS</span>
+                <span class="his-brand-sub">Clinical Health Information System</span>
+            </div>
+        </div>
+
+        <div class="his-search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Search patient by MRN, Name, Bed, or Attending..." />
+        </div>
+
+        <div class="his-header-actions">
+            <!-- Learning Nexus LMS Reports Link -->
+            <a href="../mock-nexus-api/dashboard.html" target="_blank" class="btn-player-action" style="text-decoration: none; display: flex; align-items: center; gap: 6px; background: #0f766e; color: #fff;" title="View Central LMS Reports">
+                <span>📊</span>
+                <span>LMS Registry</span>
+            </a>
+
+            <!-- Help Icon Button (Triggers GCS Learning Materials Library) -->
+            <button class="help-icon-btn" id="helpIconBtn" title="Help & Clinical Training Library (GCS)">
+                <span>❓</span>
+                <span class="help-badge" id="helpNotificationBadge">3</span>
+            </button>
+
+            <!-- User Session Profile Widget -->
+            <div class="user-profile-badge" id="userProfileWidget" title="Click to Switch User / Sign Out">
+                <div class="user-avatar" id="userAvatarText">--</div>
+                <div class="user-info">
+                    <div class="user-name">
+                        <span class="user-status-dot"></span>
+                        <span id="headerUserName">Authenticating...</span>
+                    </div>
+                    <span class="user-email" id="headerUserEmail">session loading...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ====================================================================
+         2. HIS Layout: Clinical Sidebar & Patient Census Dashboard
+         ==================================================================== -->
+    <div class="his-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="his-sidebar">
+            <a class="his-nav-item active">
+                <span>📋</span>
+                <span>Inpatient Census</span>
+                <span class="his-nav-badge">142</span>
+            </a>
+            <a class="his-nav-item">
+                <span>🚨</span>
+                <span>Emergency Triage</span>
+                <span class="his-nav-badge" style="background: #dc2626;">12</span>
+            </a>
+            <a class="his-nav-item">
+                <span>🩺</span>
+                <span>Clinical Vitals</span>
+            </a>
+            <a class="his-nav-item">
+                <span>🧪</span>
+                <span>Laboratory Orders</span>
+                <span class="his-nav-badge">7</span>
+            </a>
+            <a class="his-nav-item">
+                <span>💊</span>
+                <span>Pharmacy / Meds</span>
+            </a>
+            <a class="his-nav-item" id="sidebarTrainingLink">
+                <span>🎓</span>
+                <span>Staff SOP & Training</span>
+                <span class="his-nav-badge" style="background: #0284c7;">GCS</span>
+            </a>
+            <a class="his-nav-item" href="../mock-nexus-api/dashboard.html" target="_blank">
+                <span>📊</span>
+                <span>LMS Reports</span>
+            </a>
+        </aside>
+
+        <!-- Main HIS Workspace -->
+        <main class="his-workspace">
+            <div class="workspace-header">
+                <div class="workspace-title">
+                    <h2>Inpatient Clinical Management</h2>
+                    <p>Department: Emergency & Acute Inpatient Services • Ward 4B</p>
+                </div>
+                <div>
+                    <span style="font-size: 0.8rem; background: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-weight: 600;">
+                        Host: <code id="displayDomain">localhost</code>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Quick Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-label">Inpatient Census</span>
+                    <span class="metric-val">142 <span style="font-size: 1rem; color: #64748b;">/ 160</span></span>
+                    <span class="metric-sub">89% Bed Capacity</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">ER Triage Queue</span>
+                    <span class="metric-val">12</span>
+                    <span class="metric-sub" style="color: #d97706;">Avg Wait: 18 mins</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Pending Lab Panels</span>
+                    <span class="metric-val">7</span>
+                    <span class="metric-sub" style="color: #dc2626;">3 STAT Orders</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Staff xAPI Compliance</span>
+                    <span class="metric-val" id="userComplianceScore">In Progress</span>
+                    <span class="metric-sub" style="color: #16a34a;">Trax LRS Telemetry Active</span>
+                </div>
+            </div>
+
+            <!-- Inpatient Census Table -->
+            <div class="his-card">
+                <div class="card-header-bar">
+                    <div class="card-header-title">
+                        <span>🏥</span>
+                        <span>Active Patient Roster (Ward 4B)</span>
+                    </div>
+                    <span style="font-size: 0.8rem; color: #64748b;">Showing 5 of 142 records</span>
+                </div>
+                <table class="patient-table">
+                    <thead>
+                        <tr>
+                            <th>MRN</th>
+                            <th>Patient Name</th>
+                            <th>Room / Bed</th>
+                            <th>Chief Complaint / Diagnosis</th>
+                            <th>Attending Physician</th>
+                            <th>Triage Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>MRN-84920</code></td>
+                            <td><strong>Eleanor Campbell</strong> (58 F)</td>
+                            <td>Room 402-A</td>
+                            <td>Acute Dyspnea & Hypoxemia</td>
+                            <td class="patient-attending">Dr. Sarah Jenkins</td>
+                            <td><span class="triage-badge triage-urgent">Urgent</span></td>
+                            <td><button style="padding: 4px 8px; font-size: 0.75rem; border: 1px solid #cbd5e1; background: #fff; border-radius: 4px; cursor: pointer;">Chart</button></td>
+                        </tr>
+                        <tr>
+                            <td><code>MRN-84931</code></td>
+                            <td><strong>Raymond Zhao</strong> (42 M)</td>
+                            <td>Room 403-B</td>
+                            <td>Post-Op Appendectomy Monitoring</td>
+                            <td class="patient-attending">Dr. Sarah Jenkins</td>
+                            <td><span class="triage-badge triage-stable">Stable</span></td>
+                            <td><button style="padding: 4px 8px; font-size: 0.75rem; border: 1px solid #cbd5e1; background: #fff; border-radius: 4px; cursor: pointer;">Chart</button></td>
+                        </tr>
+                        <tr>
+                            <td><code>MRN-85012</code></td>
+                            <td><strong>Maria Santos</strong> (67 F)</td>
+                            <td>Room 405-A</td>
+                            <td>Type 2 Diabetic Ketoacidosis</td>
+                            <td class="patient-attending">Dr. Sarah Jenkins</td>
+                            <td><span class="triage-badge triage-observation">Observation</span></td>
+                            <td><button style="padding: 4px 8px; font-size: 0.75rem; border: 1px solid #cbd5e1; background: #fff; border-radius: 4px; cursor: pointer;">Chart</button></td>
+                        </tr>
+                        <tr>
+                            <td><code>MRN-85044</code></td>
+                            <td><strong>David Kowalski</strong> (71 M)</td>
+                            <td>Room 408-B</td>
+                            <td>Congestive Heart Failure Exacerbation</td>
+                            <td class="patient-attending">Dr. Sarah Jenkins</td>
+                            <td><span class="triage-badge triage-urgent">Urgent</span></td>
+                            <td><button style="padding: 4px 8px; font-size: 0.75rem; border: 1px solid #cbd5e1; background: #fff; border-radius: 4px; cursor: pointer;">Chart</button></td>
+                        </tr>
+                        <tr>
+                            <td><code>MRN-85098</code></td>
+                            <td><strong>Hannah Baker</strong> (29 F)</td>
+                            <td>Room 410-A</td>
+                            <td>Pyelonephritis (IV Antibiotic Regimen)</td>
+                            <td class="patient-attending">Dr. Sarah Jenkins</td>
+                            <td><span class="triage-badge triage-stable">Stable</span></td>
+                            <td><button style="padding: 4px 8px; font-size: 0.75rem; border: 1px solid #cbd5e1; background: #fff; border-radius: 4px; cursor: pointer;">Chart</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- ====================================================================
+         3. First-Time Session Login Prompt Modal
+         ==================================================================== -->
+    <div class="modal-backdrop" id="loginModalBackdrop">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">🏥</div>
+                <h3>ApexCare Clinical HIS</h3>
+                <p>Please enter your clinician / staff credentials to access the Health Information System and track your compliance profile.</p>
+            </div>
+
+            <form id="hisLoginForm">
+                <div class="form-field">
+                    <label for="inputUserName">Clinician / Staff Full Name</label>
+                    <input type="text" id="inputUserName" placeholder="e.g. Dr. Sarah Jenkins" value="Dr. Sarah Jenkins" required />
+                </div>
+
+                <div class="form-field">
+                    <label for="inputUserEmail">Hospital Email ID (xAPI Actor)</label>
+                    <input type="email" id="inputUserEmail" placeholder="e.g. s.jenkins@hospital-system.org" value="s.jenkins@hospital-system.org" required />
+                </div>
+
+                <div class="form-field">
+                    <label for="inputUserDept">Department / Specialty</label>
+                    <select id="inputUserDept">
+                        <option value="Emergency & Acute Care">Emergency & Acute Care</option>
+                        <option value="Inpatient Internal Medicine">Inpatient Internal Medicine</option>
+                        <option value="Critical Care / ICU">Critical Care / ICU</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Surgical Services">Surgical Services</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 8px;">
+                    ✓ Sign In & Access HIS
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ====================================================================
+         4. Help & Clinical Training Drawer (Triggered by Help Icon)
+         ==================================================================== -->
+    <div class="help-drawer" id="helpDrawer">
+        <div class="drawer-header">
+            <div class="drawer-title">
+                <h3>📚 Clinical Training & SOP Library</h3>
+                <p>Standardized Learning Objects Hosted via GCS</p>
+            </div>
+            <button class="btn-close-drawer" id="closeDrawerBtn" title="Close Library">&times;</button>
+        </div>
+
+        <div class="drawer-content">
+            <div style="background: #f1f5f9; padding: 12px; border-radius: 8px; font-size: 0.78rem; color: #475569;">
+                <strong>Logged In As:</strong> <span id="drawerActorDisplay">Dr. Sarah Jenkins</span><br>
+                <span>xAPI statements are injected dynamically with your session credentials.</span>
+            </div>
+
+            <!-- Item 1: PDF Media Wrapper -->
+            <div class="training-item-card">
+                <div class="training-item-header">
+                    <span class="training-tag">PDF Document Wrapper</span>
+                    <span class="training-status" id="status-pdf">Not Started</span>
+                </div>
+                <div class="training-item-title">Hospital Compliance & Data Privacy Guidelines</div>
+                <div class="training-item-desc">
+                    Mandatory SOP document with dwell tracking, page reading progression, and official completion attestation.
+                </div>
+                <button class="btn-launch-training" data-asset="pdf">
+                    <span>▶</span>
+                    <span>Launch PDF Document</span>
+                </button>
+            </div>
+
+            <!-- Item 2: MP4 Video Wrapper -->
+            <div class="training-item-card">
+                <div class="training-item-header">
+                    <span class="training-tag" style="background: #fef3c7; color: #d97706;">MP4 Video Wrapper</span>
+                    <span class="training-status" id="status-video">Not Started</span>
+                </div>
+                <div class="training-item-title">Clinical Safety & Infection Control Protocol</div>
+                <div class="training-item-desc">
+                    Standardized HTML5 video player with TinCan.js telemetry tracking quartiles (25%, 50%, 75%, 100%).
+                </div>
+                <button class="btn-launch-training" data-asset="video">
+                    <span>▶</span>
+                    <span>Launch Video Training</span>
+                </button>
+            </div>
+
+            <!-- Item 3: Articulate 360 Package -->
+            <div class="training-item-card">
+                <div class="training-item-header">
+                    <span class="training-tag" style="background: #dcfce7; color: #16a34a;">Articulate 360</span>
+                    <span class="training-status" id="status-articulate">Not Started</span>
+                </div>
+                <div class="training-item-title">Annual HIPAA Knowledge Check & Quiz</div>
+                <div class="training-item-desc">
+                    Articulate Storyline 360 / Rise 360 package verifying native query string parsing and score reporting.
+                </div>
+                <button class="btn-launch-training" data-asset="articulate">
+                    <span>▶</span>
+                    <span>Launch Articulate Course</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="drawer-footer">
+            <a href="../mock-nexus-api/dashboard.html" target="_blank" class="btn-view-lms">
+                <span>📊</span>
+                <span>Open Mock LMS Report Registry</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ====================================================================
+         5. In-App Learning Object Player Modal (Overlay)
+         ==================================================================== -->
+    <div class="player-modal-backdrop hidden" id="playerModalBackdrop">
+        <div class="player-window">
+            <div class="player-header">
+                <div class="player-title-info">
+                    <h4 id="playerModalTitle">Training Module Viewer</h4>
+                    <span id="playerModalActor">Tracking as: ...</span>
+                </div>
+                <div class="player-controls">
+                    <a href="#" target="_blank" class="btn-player-action" id="openExternalBtn">↗ New Window</a>
+                    <button class="btn-close-player" id="closePlayerBtn" title="Close Training">&times;</button>
+                </div>
+            </div>
+            <div class="player-iframe-body">
+                <iframe id="trainingIframe" class="player-iframe" allow="autoplay; fullscreen"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================================================================
+         6. In-App Toast Notification
+         ==================================================================== -->
+    <div class="his-toast" id="hisToast">
+        <span style="font-size: 1.2rem;">🎉</span>
+        <div>
+            <strong id="toastTitle">Training Completed!</strong>
+            <div id="toastMessage" style="font-size: 0.78rem; color: #cbd5e1;">xAPI statement recorded in Trax LRS. Syncing downstream...</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

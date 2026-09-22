@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articulate 360 Storyline / Rise Package (xAPI Simulation)</title>
+    <style>
+        :root {
+            --art-blue: #0076ce;
+            --art-dark: #2c3e50;
+            --art-gray: #f4f6f9;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 24px;
+            background-color: var(--art-gray);
+            color: var(--art-dark);
+            display: flex;
+            justify-content: center;
+        }
+
+        .articulate-container {
+            max-width: 800px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .articulate-bar {
+            background: var(--art-dark);
+            color: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .articulate-bar h1 {
+            font-size: 1rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            background: var(--art-blue);
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .slide-body {
+            padding: 32px;
+            min-height: 320px;
+        }
+
+        .slide {
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide h2 {
+            margin-top: 0;
+            color: var(--art-blue);
+        }
+
+        .quiz-option {
+            display: block;
+            margin: 12px 0;
+            padding: 12px;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--art-blue);
+            background: #f0f7ff;
+        }
+
+        .slide-footer {
+            background: #fafbfc;
+            border-top: 1px solid #e1e4e8;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background: var(--art-blue);
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .debug-box {
+            margin-top: 16px;
+            padding: 12px;
+            background: #eef2f7;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-family: monospace;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="articulate-container">
+        <div class="articulate-bar">
+            <h1><span>Articulate 360 Player</span> <span class="badge">xAPI Package</span></h1>
+            <div id="learnerBadge" style="font-size: 0.85rem;">Learner: Detecting...</div>
+        </div>
+
+        <div class="slide-body">
+            <!-- Slide 1: Welcome -->
+            <div id="slide1" class="slide active">
+                <h2>Welcome to Articulate Storyline 360</h2>
+                <p>This module verifies native Articulate 360 query string parser behavior: reading <code>endpoint</code>, <code>auth</code>, and <code>actor</code>.</p>
+                <div class="debug-box" id="debugParams">Parsing query parameters...</div>
+            </div>
+
+            <!-- Slide 2: Interactive Question -->
+            <div id="slide2" class="slide">
+                <h2>Knowledge Check: Data Security</h2>
+                <p>What should you do if an unauthorized actor requests unencrypted health records?</p>
+                <label class="quiz-option">
+                    <input type="radio" name="quiz" value="A"> Provide the records immediately
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="quiz" value="B" id="correctAnswer"> Refuse and report immediately to the Information Security Officer
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="quiz" value="C"> Email the records to personal account
+                </label>
+            </div>
+
+            <!-- Slide 3: Completion -->
+            <div id="slide3" class="slide">
+                <h2 style="color: #2e7d32;">Course Complete!</h2>
+                <p>Congratulations! You have passed the Articulate 360 training simulation.</p>
+                <p>An official <strong>passed / completed</strong> xAPI statement with a scaled score of 1.0 has been transmitted to Trax LRS.</p>
+            </div>
+        </div>
+
+        <div class="slide-footer">
+            <button id="prevBtn" class="btn" disabled>Back</button>
+            <span id="slideCounter" style="font-size: 0.85rem; font-weight: bold;">Slide 1 of 3</span>
+            <button id="nextBtn" class="btn">Next</button>
+        </div>
+    </div>
+
+    <!-- TinCan Library -->
+    <script src="../lib/tincan-min.js"></script>
+    <script>
+        (function() {
+            const tc = TinCan.fromQueryParams();
+            const debugParams = document.getElementById('debugParams');
+            const learnerBadge = document.getElementById('learnerBadge');
+
+            const learnerName = tc.actor?.name || "Articulate Learner";
+            const learnerMbox = tc.actor?.mbox || "mailto:learner@example.com";
+            learnerBadge.textContent = `Learner: ${learnerName}`;
+
+            debugParams.innerHTML = `
+                <strong>Parsed Parameters:</strong><br>
+                • Endpoint: ${tc.recordStores[0]?.endpoint || 'None'}<br>
+                • Auth: ${tc.recordStores[0]?.auth ? 'Present (Base64)' : 'None'}<br>
+                • Actor: ${learnerName} (${learnerMbox})<br>
+                • Activity: ${tc.activity || 'Articulate Course'}
+            `;
+
+            let currentSlide = 1;
+            const totalSlides = 3;
+
+            function sendArticulateStatement(verb, result) {
+                const statement = {
+                    actor: tc.actor || { name: learnerName, mbox: learnerMbox },
+                    verb: verb,
+                    object: {
+                        id: tc.activity || "http://lrs-poc.internal/activities/articulate-storyline-course",
+                        definition: {
+                            name: { "en-US": "Articulate Storyline 360 Training Module" },
+                            type: "http://adlnet.gov/expapi/activities/course"
+                        }
+                    },
+                    result: result || {}
+                };
+
+                tc.sendStatement(statement, (err, res) => {
+                    console.log("[Articulate xAPI]", verb.display['en-US'], err || res);
+                });
+
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'XAPI_STATEMENT',
+                        statement: statement
+                    }, '*');
+                }
+            }
+
+            // Fire launched
+            sendArticulateStatement(TinCan.Verbs.launched);
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+
+            function updateSlide() {
+                for (let i = 1; i <= totalSlides; i++) {
+                    const el = document.getElementById('slide' + i);
+                    if (el) el.className = (i === currentSlide) ? 'slide active' : 'slide';
+                }
+                prevBtn.disabled = (currentSlide === 1);
+                slideCounter.textContent = `Slide ${currentSlide} of ${totalSlides}`;
+
+                if (currentSlide === totalSlides) {
+                    nextBtn.style.display = 'none';
+                    sendArticulateStatement(TinCan.Verbs.passed, {
+                        completion: true,
+                        success: true,
+                        score: { scaled: 1.0, raw: 100, min: 0, max: 100 }
+                    });
+                } else {
+                    nextBtn.style.display = 'inline-block';
+                }
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < totalSlides) {
+                    currentSlide++;
+                    sendArticulateStatement(TinCan.Verbs.experienced, {
+                        extensions: { "http://lrs-poc.internal/extensions/slide": currentSlide }
+                    });
+                    updateSlide();
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 1) {
+                    currentSlide--;
+                    updateSlide();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

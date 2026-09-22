@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Nexus - Enterprise LMS Compliance & Telemetry Reports</title>
+    <style>
+        :root {
+            --nexus-blue: #0f4c81;
+            --nexus-light: #e8f4fd;
+            --success: #16a34a;
+            --amber: #d97706;
+            --border: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 24px;
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 20px 28px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 6px solid var(--nexus-blue);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: var(--nexus-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header p {
+            margin: 4px 0 0 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            padding: 16px 20px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--nexus-blue);
+            margin-top: 4px;
+        }
+
+        /* Tabs */
+        .tabs-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: var(--nexus-blue);
+            color: #ffffff;
+            border-color: var(--nexus-blue);
+            box-shadow: 0 2px 4px rgba(15, 76, 129, 0.2);
+        }
+
+        .badge-count {
+            background: rgba(0,0,0,0.08);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+
+        .tab-btn.active .badge-count {
+            background: rgba(255,255,255,0.25);
+            color: #fff;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 14px;
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .badge-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-completed { background: #dcfce7; color: #16a34a; }
+        .badge-launched { background: #e0f2fe; color: #0284c7; }
+        .badge-progressed { background: #fef3c7; color: #d97706; }
+
+        .btn {
+            background: var(--nexus-blue);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+
+        .btn-outline:hover {
+            background: #fee2e2;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .live-pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #16a34a;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 1.6s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 1; }
+            70% { transform: scale(1.4); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div>
+                <h1><span>🏢 Learning Nexus</span> <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">(Mock Enterprise LMS)</span></h1>
+                <p>Downstream Compliance & Telemetry Registry • Fed by Google Cloud Run Trax LRS via Data Bridge</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div>
+                    <span class="live-pulse"></span>
+                    <span style="font-size: 0.82rem; font-weight: 600; color: #16a34a;">Live Auto-Sync (2s)</span>
+                </div>
+                <a href="/portal/index.html" class="btn" style="text-decoration: none;">🏥 Return to HIS</a>
+            </div>
+        </header>
+
+        <!-- Metric Counters -->
+        <div class="stat-grid">
+            <div class="stat-card">
+                <span class="stat-label">Verified Course Completions</span>
+                <span class="stat-value" id="statCompletions">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Total User Telemetry Actions</span>
+                <span class="stat-value" id="statActions">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Active Clinicians / Learners</span>
+                <span class="stat-value" id="statLearners">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Data Bridge Status</span>
+                <span class="stat-value" style="font-size: 1.3rem; color: #16a34a;">Synchronized</span>
+            </div>
+        </div>
+
+        <!-- Tab Controls -->
+        <div class="tabs-bar">
+            <button class="tab-btn active" id="tabCompletionsBtn" onclick="switchTab('completions')">
+                <span>🎓 Certified Completions</span>
+                <span class="badge-count" id="badgeCompletionsCount">0</span>
+            </button>
+            <button class="tab-btn" id="tabTelemetryBtn" onclick="switchTab('telemetry')">
+                <span>⚡ Live Activity & Progress Stream</span>
+                <span class="badge-count" id="badgeTelemetryCount">0</span>
+            </button>
+        </div>
+
+        <!-- Card: Completions Table View -->
+        <div class="card" id="completionsCard">
+            <div class="card-header">
+                <h2 class="card-title">📋 Official Course Completion Certificates</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" onclick="fetchData()">↻ Refresh</button>
+                    <button class="btn btn-outline" onclick="clearData()">Clear Records</button>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Learner Name</th>
+                        <th>Email (xAPI Actor)</th>
+                        <th>Course / Module Title</th>
+                        <th>Score</th>
+                        <th>Status</th>
+                        <th>Completed At</th>
+                        <th>LRS Source</th>
+                    </tr>
+                </thead>
+                <tbody id="completionsBody">
+                    <tr>
+                        <td colspan="7" class="empty-state">Loading completion records...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Card: Telemetry & Progress Stream View -->
+        <div class="card" id="telemetryCard" style="display: none;">
+            <div class="card-header">
+                <h2 class="card-title">⚡ Real-Time User Activity & Progress Logs</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" onclick="fetchData()">↻ Refresh</button>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Learner Name</th>
+                        <th>Email</th>
+                        <th>Course / Document</th>
+                        <th>Action / Verb</th>
+                        <th>Progress Milestone</th>
+                        <th>Dwell Duration</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="telemetryBody">
+                    <tr>
+                        <td colspan="7" class="empty-state">Loading user action stream...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Intelligent API endpoint resolution (works seamlessly on port 8088, port 4000, or custom domain lrs.lxdhq.in)
+        function getApiBase() {
+            if (window.location.port === '4000') return '';
+            // If on port 8088 or domain, use reverse proxy or fallback to port 4000
+            return '/api/v1';
+        }
+
+        let currentTab = 'completions';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            const tabComp = document.getElementById('tabCompletionsBtn');
+            const tabTelem = document.getElementById('tabTelemetryBtn');
+            const cardComp = document.getElementById('completionsCard');
+            const cardTelem = document.getElementById('telemetryCard');
+
+            if (tab === 'completions') {
+                tabComp.classList.add('active');
+                tabTelem.classList.remove('active');
+                cardComp.style.display = 'block';
+                cardTelem.style.display = 'none';
+            } else {
+                tabTelem.classList.add('active');
+                tabComp.classList.remove('active');
+                cardComp.style.display = 'none';
+                cardTelem.style.display = 'block';
+            }
+        }
+
+        async function fetchData() {
+            try {
+                // Fetch completions
+                const compRes = await fetch(getApiBase() + '/completions').catch(() => null);
+                let compList = [];
+                if (compRes && compRes.ok) {
+                    const data = await compRes.json();
+                    compList = data.completions || [];
+                }
+
+                // Fetch telemetry actions
+                const telemRes = await fetch(getApiBase() + '/telemetry').catch(() => null);
+                let telemList = [];
+                if (telemRes && telemRes.ok) {
+                    const data = await telemRes.json();
+                    telemList = data.telemetry || [];
+                }
+
+                renderCompletions(compList);
+                renderTelemetry(telemList);
+
+                // Update metrics
+                document.getElementById('statCompletions').textContent = compList.length;
+                document.getElementById('badgeCompletionsCount').textContent = compList.length;
+                document.getElementById('statActions').textContent = telemList.length;
+                document.getElementById('badgeTelemetryCount').textContent = telemList.length;
+
+                const allEmails = new Set([
+                    ...compList.map(c => c.user?.email),
+                    ...telemList.map(t => t.user?.email)
+                ].filter(Boolean));
+                document.getElementById('statLearners').textContent = allEmails.size;
+            } catch (e) {
+                console.error('Data fetch error:', e);
+            }
+        }
+
+        function renderCompletions(list) {
+            const tbody = document.getElementById('completionsBody');
+            if (list.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            No certified completions found yet. Complete a training module in the HIS portal!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = list.map(c => `
+                <tr>
+                    <td><strong>${escape(c.user?.name || 'Unknown')}</strong></td>
+                    <td><code>${escape(c.user?.email || 'N/A')}</code></td>
+                    <td>${escape(c.course?.title || c.course?.id || 'Course')}</td>
+                    <td><strong>${c.score !== undefined ? c.score + '%' : '100%'}</strong></td>
+                    <td><span class="badge-status badge-completed">${escape(c.status || 'COMPLETED')}</span></td>
+                    <td>${new Date(c.completed_at || c.received_at).toLocaleString()}</td>
+                    <td><span style="font-size: 0.78rem; color: #64748b;">${escape(c.metadata?.source_lrs || 'Trax LRS')}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderTelemetry(list) {
+            const tbody = document.getElementById('telemetryBody');
+            if (list.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            No telemetry actions recorded yet. Launch a video or PDF to stream live activity!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = list.map(t => {
+                let badgeClass = 'badge-launched';
+                if (t.action.includes('PROGRESS')) badgeClass = 'badge-progressed';
+                if (t.action.includes('COMPLETE') || t.action.includes('PASS')) badgeClass = 'badge-completed';
+
+                return `
+                    <tr>
+                        <td><strong>${escape(t.user?.name || 'Unknown')}</strong></td>
+                        <td><code>${escape(t.user?.email || 'N/A')}</code></td>
+                        <td>${escape(t.course?.title || t.course?.id || 'Course')}</td>
+                        <td><span class="badge-status ${badgeClass}">${escape(t.action)}</span></td>
+                        <td>${t.progress !== null && t.progress !== undefined ? '<strong>' + t.progress + '%</strong>' : '-'}</td>
+                        <td>${escape(t.duration || '-')}</td>
+                        <td>${new Date(t.timestamp).toLocaleTimeString()}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function clearData() {
+            if (confirm('Clear all recorded completions and telemetry?')) {
+                await fetch(getApiBase() + '/completions/clear', { method: 'POST' });
+                fetchData();
+            }
+        }
+
+        function escape(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        fetchData();
+        setInterval(fetchData, 2000);
+    </script>
+</body>
+</html>

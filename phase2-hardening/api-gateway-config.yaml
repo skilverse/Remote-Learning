@@ -1,0 +1,69 @@
+# Google Cloud API Gateway Configuration for Phase 2 Authenticated Hardening
+swagger: "2.0"
+info:
+  title: "Healthcare LRS Secure Gateway"
+  description: "Edge gateway intercepting xAPI telemetry with cryptographic JWT validation"
+  version: "2.0.0"
+
+schemes:
+  - "https"
+produces:
+  - "application/json"
+consumes:
+  - "application/json"
+
+# JWT Security Definition for Healthcare OIDC Issuer
+securityDefinitions:
+  healthcare_jwt:
+    type: "oauth2"
+    authorizationUrl: ""
+    flow: "implicit"
+    x-google-issuer: "https://auth.hospital-platform.org"
+    x-google-jwks_uri: "https://auth.hospital-platform.org/.well-known/jwks.json"
+    x-google-audiences: "https://lrs-gateway.internal.hospital.org"
+
+paths:
+  /xapi/statements:
+    post:
+      summary: "Ingest xAPI Statement with Token Verification"
+      operationId: "postXapiStatement"
+      security:
+        - healthcare_jwt: []
+      parameters:
+        - name: "lti_token"
+          in: "query"
+          description: "60-second TTL Ephemeral JWT containing opaque learner UUID"
+          required: false
+          type: "string"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+      x-google-backend:
+        address: "https://token-exchange-service-internal.a.run.app"
+        path_translation: "APPEND_PATH_TO_ADDRESS"
+        protocol: "h2"
+      responses:
+        200:
+          description: "Statement validated and stored successfully"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+        401:
+          description: "Unauthorized: Invalid or expired JWT"
+        403:
+          description: "Forbidden: Signature verification failed"
+
+    get:
+      summary: "Query Statements (Internal Service Only)"
+      operationId: "getXapiStatements"
+      security:
+        - healthcare_jwt: []
+      x-google-backend:
+        address: "https://trax-lrs-internal.a.run.app"
+        path_translation: "APPEND_PATH_TO_ADDRESS"
+      responses:
+        200:
+          description: "Filtered xAPI statements stream"

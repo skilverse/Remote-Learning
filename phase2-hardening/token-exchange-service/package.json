@@ -1,0 +1,13 @@
+{
+  "name": "vpc-token-exchange-service",
+  "version": "1.0.0",
+  "description": "Phase 2 Private VPC Microservice mapping opaque JWT UUID to internal xAPI Actor schema",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

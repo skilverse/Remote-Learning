@@ -1,0 +1,14 @@
+{
+  "name": "lrs-learning-nexus-data-bridge",
+  "version": "1.0.0",
+  "description": "Component 03: Serverless Data Bridge syncing Trax LRS completions to Learning Nexus REST API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "poll": "node -e 'require(\"./index.js\").pollAndSync()'"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
