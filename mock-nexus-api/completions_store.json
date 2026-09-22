@@ -14,13 +14,13 @@
     "status": "completed",
     "score": 100,
     "completed_at": "2026-09-22T08:37:10.388Z",
-    "synced_at": "2026-09-22T09:10:45.730Z",
+    "synced_at": "2026-09-22T09:10:57.742Z",
     "metadata": {
       "source_lrs": "Trax LRS (Cloud Run)",
       "verb": "http://adlnet.gov/expapi/verbs/completed"
     },
     "received_at": "2026-09-22T08:37:36.869Z",
-    "updated_at": "2026-09-22T09:10:45.731Z"
+    "updated_at": "2026-09-22T09:10:57.742Z"
   },
   {
     "id": "536bf57d-9174-4e36-88b5-1089cb3e4447",
