@@ -20,6 +20,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 data-bridge/watermark.json
+mock-nexus-api/*_store.json
+mock-lrs/lrs_statements.json
 
 # Operating System files
 .DS_Store
